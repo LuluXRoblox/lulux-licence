@@ -69,7 +69,7 @@
   }
   .search-wrap input:focus{border-color:var(--purple)}
   .search-wrap::before{
-    content:"";position:absolute;left:12px;top:50%;transform:translateY(-50%);
+    content:"🔍";position:absolute;left:12px;top:50%;transform:translateY(-50%);
     font-size:14px;opacity:.5
   }
 
@@ -167,9 +167,9 @@
 <!-- ╔══ LOGIN ══╗ -->
 <div id="login-screen">
   <div class="login-box">
-    <h1>LuluXGAG</h1>
-    <p>Admin Panel</p>
-    <input type="password" id="secret-input" placeholder="Admin Key..." onkeydown="if(event.key==='Enter')doLogin()">
+    <h1>🔐 LuluXGAG</h1>
+    <p>Admin Panel — Enter Secret Key</p>
+    <input type="password" id="secret-input" placeholder="Admin secret..." onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn btn-purple" style="width:100%" onclick="doLogin()">Login</button>
     <div class="login-error" id="login-err"></div>
   </div>
@@ -180,7 +180,7 @@
   <header>
     <div class="logo">LuluX<span>GAG</span> <span style="font-size:13px;color:var(--muted);font-weight:400">Admin Panel</span></div>
     <div class="header-right">
-      <span class="badge">Key System v2</span>
+      <span class="badge">🔑 Key System v2</span>
       <button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>
     </div>
   </header>
@@ -199,8 +199,8 @@
       <div class="search-wrap">
         <input type="text" id="search" placeholder="Search key, name, status..." oninput="renderTable()">
       </div>
-      <button class="btn btn-purple" onclick="openAddModal()">Add Key</button>
-      <button class="btn btn-blue btn-sm" onclick="loadKeys()">Refresh</button>
+      <button class="btn btn-purple" onclick="openAddModal()">➕ Add Key</button>
+      <button class="btn btn-blue btn-sm" onclick="loadKeys()">🔄 Refresh</button>
     </div>
 
     <!-- Table -->
@@ -221,7 +221,7 @@
 <!-- ╔══ ADD/EDIT MODAL ══╗ -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
-    <h2 id="modal-title">Add Key</h2>
+    <h2 id="modal-title">➕ Add Key</h2>
     <div class="field">
       <label>Key *</label>
       <input type="text" id="m-key" placeholder="e.g. LULUX-XXXX-2026">
@@ -244,8 +244,8 @@
     </div>
     <div class="field">
       <label>Expired In — format <code style="color:var(--purple2)">Jam:Hari:Bulan</code></label>
-      <input type="text" id="m-expire" placeholder="0:0:0 = Permanent  |  12:0:0 = 12 jam  |  0:7:0 = 7 hari">
-      <div class="field-hint">Contoh: 12:0:0 (12 jam) · 0:1:0 (1 hari) · 0:30:0 (30 hari) · 0:0:1 (1 bulan)</div>
+      <input type="text" id="m-expire" placeholder="Kosong = Permanent  |  2H  |  1D  |  1W  |  1M  |  2D 1W = 9 hari">
+      <div class="field-hint">H=jam · D=hari · W=minggu · M=bulan &nbsp;|&nbsp; Contoh: 2H · 1D · 2W · 1M · 2D 1W (9 hari)</div>
     </div>
     <div class="field" id="reset-field" style="display:none">
       <label><input type="checkbox" id="m-reset"> Reset HWID list</label>
@@ -271,7 +271,7 @@ let editingKey = null;
 // ── Auth ──────────────────────────────────────────────────────
 function doLogin() {
   const val = document.getElementById("secret-input").value.trim();
-  if (!val) { document.getElementById("login-err").textContent = "Enter key"; return; }
+  if (!val) { document.getElementById("login-err").textContent = "Enter secret key"; return; }
   ADMIN_SECRET = val;
   loadKeys().then(ok => {
     if (ok) {
@@ -354,7 +354,7 @@ function renderTable() {
 
     let expClass = "expire-perm", expLabel = "Permanent";
     if (!isPerm) {
-      if (isExp) { expClass = "expire-warn"; expLabel = "Expired"; }
+      if (isExp) { expClass = "expire-warn"; expLabel = "⚠ Expired"; }
       else if (rem < 86400) { expClass = "expire-warn"; expLabel = k.expireLabel || "< 1D"; }
       else { expClass = "expire-ok"; expLabel = k.expireLabel || "Active"; }
     }
@@ -370,8 +370,8 @@ function renderTable() {
       <td><span class="hwid-count">${(k.hwids||[]).length} / ${k.maxHwid}</span></td>
       <td>
         <div class="actions">
-          <button class="btn btn-blue btn-sm" onclick='openEditModal(${JSON.stringify(k)})'>Edit</button>
-          <button class="btn btn-red btn-sm" onclick="deleteKey('${k.key}', '${k.name}')">Del</button>
+          <button class="btn btn-blue btn-sm" onclick='openEditModal(${JSON.stringify(k)})'>✏ Edit</button>
+          <button class="btn btn-red btn-sm" onclick="deleteKey('${k.key}', '${k.name}')">🗑 Del</button>
         </div>
       </td>
     </tr>`;
@@ -381,7 +381,7 @@ function renderTable() {
 // ── Modal ─────────────────────────────────────────────────────
 function openAddModal() {
   editingKey = null;
-  document.getElementById("modal-title").textContent = "Add Key";
+  document.getElementById("modal-title").textContent = "➕ Add Key";
   document.getElementById("m-key").value = "";
   document.getElementById("m-key").disabled = false;
   document.getElementById("m-name").value = "";
