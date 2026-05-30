@@ -55,6 +55,7 @@ export default async function handler(req, res) {
     name: data.name,
     status: data.status,
     expireAt: data.expireAt || 0,
+    serverNow: Math.floor(Date.now() / 1000),  // kirim waktu server UTC
     message: "OK",
   });
 }
