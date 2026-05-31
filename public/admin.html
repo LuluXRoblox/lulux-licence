@@ -462,7 +462,7 @@ function toast(msg, type = "ok") {
 }
 
 // ── Key generation ───────────────────────────────────────────
-function generateKey() {
+function generateKey(name) {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const rand = (n) => Array.from({length: n}, () =>
     chars[Math.floor(Math.random() * chars.length)]).join('');
@@ -472,11 +472,16 @@ function generateKey() {
   const hh = String(now.getHours()).padStart(2,'0');
   const mi = String(now.getMinutes()).padStart(2,'0');
   const mo = String(now.getMonth()+1).padStart(2,'0');
-  return `LULUX-${rand(4)}-${rand(4)}-${hh}${mi}-${mo}${dd}${yy}`;
+  // Admin: LULUX-NAME-XXXX-HHMM-MMDDYY
+  const namePart = name
+    ? name.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)
+    : rand(4);
+  return `LULUX-${namePart}-${rand(4)}-${hh}${mi}-${mo}${dd}${yy}`;
 }
 
 function genKey() {
-  document.getElementById('m-key').value = generateKey();
+  const name = document.getElementById('m-name').value.trim();
+  document.getElementById('m-key').value = generateKey(name);
 }
 
 function copyKey() {
