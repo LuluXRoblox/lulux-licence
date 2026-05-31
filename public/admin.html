@@ -168,8 +168,8 @@
 <div id="login-screen">
   <div class="login-box">
     <h1>LuluXGAG</h1>
-    <p>Admin Panel — Enter Key</p>
-    <input type="password" id="secret-input" placeholder="Admin Key" onkeydown="if(event.key==='Enter')doLogin()">
+    <p>Admin Panel — Enter Secret Key</p>
+    <input type="password" id="secret-input" placeholder="Admin secret..." onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn btn-purple" style="width:85%;margin:0 auto;display:block" onclick="doLogin()">Login</button>
     <div class="login-error" id="login-err"></div>
   </div>
@@ -191,8 +191,6 @@
       Total: <span id="st-total">0</span>
       <span class="sep">|</span>
       Active: <span id="st-active" style="color:var(--green)">0</span>
-      <span class="sep">|</span>
-      Expired: <span id="st-expired" style="color:var(--red)">0</span>
       <span class="sep">|</span>
       HWIDs: <span id="st-hwids" style="color:var(--blue)">0</span>
     </div>
@@ -227,11 +225,15 @@
     <h2 id="modal-title">Add Key</h2>
     <div class="field">
       <label>Key *</label>
-      <input type="text" id="m-key" placeholder="ex. LULUX-XXXX-XXX">
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="text" id="m-key" placeholder="e.g. LULUX-XXXX-XXXX-3126" style="flex:1;margin-bottom:0">
+        <button class="btn btn-purple btn-sm" type="button" onclick="genKey()" title="Generate key">Gen</button>
+        <button class="btn btn-blue btn-sm" type="button" onclick="copyKey()" title="Copy key">Copy</button>
+      </div>
     </div>
     <div class="field">
       <label>Owner Name *</label>
-      <input type="text" id="m-name" placeholder="example Lulu">
+      <input type="text" id="m-name" placeholder="e.g. Lulu">
     </div>
     <div class="field">
       <label>Status</label>
@@ -242,13 +244,13 @@
       </select>
     </div>
     <div class="field">
-      <label>Max HWID</label>
+      <label>Max HWID (1–999)</label>
       <input type="number" id="m-hwid" value="1" min="1" max="999">
     </div>
     <div class="field">
-      <label>Expired In - <code style="color:var(--purple2)">Hours Day Week</code></label>
-      <input type="text" id="m-expire" placeholder="nill = Permanent  |  2H  |  1D  |  1W  |  1M  |  2D 1W">
-      <div class="field-hint">H=hours · D=days · W=weeks · M=months &nbsp;|&nbsp; Example: 2H · 1D · 2W · 1M · 2D 1W (9 Day)</div>
+      <label>Expired In — format <code style="color:var(--purple2)">Jam:Hari:Bulan</code></label>
+      <input type="text" id="m-expire" placeholder="Kosong = Permanent  |  2H  |  1D  |  1W  |  1M  |  2D 1W = 9 hari">
+      <div class="field-hint">H=hours · D=days · W=weeks · M=months &nbsp;|&nbsp; Contoh: 2H · 1D · 2W · 1M · 2D 1W (9 hari)</div>
     </div>
     <div class="field" id="reset-field" style="display:none">
       <label><input type="checkbox" id="m-reset"> Reset HWID list</label>
@@ -274,7 +276,7 @@ let editingKey = null;
 // ── Auth ──────────────────────────────────────────────────────
 function doLogin() {
   const val = document.getElementById("secret-input").value.trim();
-  if (!val) { document.getElementById("login-err").textContent = "Enter key."; return; }
+  if (!val) { document.getElementById("login-err").textContent = "Enter secret key."; return; }
   ADMIN_SECRET = val;
   loadKeys().then(ok => {
     if (ok) {
@@ -321,15 +323,13 @@ async function loadKeys() {
 // ── Stats ─────────────────────────────────────────────────────
 function updateStats() {
   const now = Math.floor(Date.now() / 1000);
-  let active = 0, expired = 0, hwids = 0;
+  let active = 0, hwids = 0;
   allKeys.forEach(k => {
     if (!k.expireAt || k.expireAt === 0 || k.expireAt > now) active++;
-    else expired++;
     hwids += (k.hwids || []).length;
   });
   document.getElementById("st-total").textContent = allKeys.length;
   document.getElementById("st-active").textContent = active;
-  document.getElementById("st-expired").textContent = expired;
   document.getElementById("st-hwids").textContent = hwids;
 }
 
@@ -459,6 +459,30 @@ function toast(msg, type = "ok") {
   el.className = `show ${type}`;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => el.className = "", 3000);
+}
+
+// ── Key generation ───────────────────────────────────────────
+function generateKey() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const rand = (n) => Array.from({length: n}, () =>
+    chars[Math.floor(Math.random() * chars.length)]).join('');
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2, '0');
+  const yy = String(now.getFullYear()).slice(-2);
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mi = String(now.getMinutes()).padStart(2,'0');
+  const mo = String(now.getMonth()+1).padStart(2,'0');
+  return `LULUX-${rand(4)}-${rand(4)}-${hh}${mi}-${mo}${dd}${yy}`;
+}
+
+function genKey() {
+  document.getElementById('m-key').value = generateKey();
+}
+
+function copyKey() {
+  const val = document.getElementById('m-key').value.trim();
+  if (!val) { toast('Generate a key first.', 'err'); return; }
+  navigator.clipboard.writeText(val).then(() => toast('Key copied.', 'ok'));
 }
 
 // ── Close modal on bg click ───────────────────────────────────
