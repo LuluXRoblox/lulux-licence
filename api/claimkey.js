@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `https://publisher.linkvertise.com/api/v1/antiBypass/hash/${hash}`,
-        { headers: { Authorization: LINKVERTISE_API_KEY } }
+        { headers: { Authorization: `${LINKVERTISE_USER_ID}:${LINKVERTISE_API_KEY}` } }
       );
       const text = await r.text();
       let data;
