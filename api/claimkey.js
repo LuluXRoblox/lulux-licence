@@ -1,6 +1,4 @@
-export const config = { runtime: "edge" };
 import { Redis } from "@upstash/redis";
-import crypto from "crypto";
 
 const kv = new Redis({
   url:   process.env.UPSTASH_REDIS_REST_URL,
@@ -61,7 +59,9 @@ export default async function handler(req, res) {
     }
 
     // Issue one-time session token (valid 5 menit)
-    const token = crypto.randomBytes(16).toString("hex");
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    const token = Array.from(arr).map(b => b.toString(16).padStart(2,"0")).join("");
     await kv.set(`session:${token}`, "1", { ex: 300 });
     return res.status(200).json({ valid: true, token });
   }
