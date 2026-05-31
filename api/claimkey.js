@@ -1,3 +1,4 @@
+export const config = { runtime: "edge" };
 import { Redis } from "@upstash/redis";
 import crypto from "crypto";
 
@@ -53,10 +54,10 @@ export default async function handler(req, res) {
       );
       const text = (await r.text()).trim();
       if (text !== "TRUE") {
-        return res.status(200).json({ valid: false, message: "Verification failed" });
+        return res.status(200).json({ valid: false, message: "Verification failed: " + text });
       }
-    } catch {
-      return res.status(200).json({ valid: false, message: "Linkvertise error" });
+    } catch (e) {
+      return res.status(200).json({ valid: false, message: "Linkvertise error: " + e.message });
     }
 
     // Issue one-time session token (valid 5 menit)
