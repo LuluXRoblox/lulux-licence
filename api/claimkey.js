@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   // ── GET LINKVERTISE URL ──────────────────────────────────────
   if (action === "getlink") {
     const callback = `${SITE_URL}/getkey`;
-    const encoded  = encodeURIComponent(callback);
+    const encoded  = Buffer.from(callback).toString("base64");
     const random   = (Math.random() * 1000).toFixed(10);
     const url      = `https://link-to.net/${LINKVERTISE_USER_ID}/${random}/dynamic?r=${encoded}`;
     return res.status(200).json({ url });
