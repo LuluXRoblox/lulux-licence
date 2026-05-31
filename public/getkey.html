@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuluXGAG — Free Key</title>
+<title>LuluXStarDev — Get Key</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   :root{
@@ -23,13 +23,12 @@
 
   /* Header */
   .header{text-align:center;margin-bottom:28px}
-  .header-sub{font-size:11px;letter-spacing:4px;color:var(--muted);
-    margin-bottom:6px;text-transform:uppercase}
   .header-title{font-size:22px;font-weight:700;letter-spacing:1px}
-  .header-desc{font-size:12px;color:var(--muted);margin-top:4px}
+  .header-desc{font-size:12px;color:var(--muted);margin-top:6px}
 
-  /* Progress */
-  .progress-wrap{margin-bottom:20px}
+  /* Progress + Button row */
+  .verify-row{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+  .progress-wrap{flex:3}
   .progress-meta{display:flex;justify-content:space-between;
     margin-bottom:8px;font-size:11px;text-transform:uppercase;letter-spacing:2px}
   .progress-label{color:var(--muted)}
@@ -39,25 +38,23 @@
     background:linear-gradient(90deg,var(--purple),var(--purple2));
     border-radius:999;transition:width .4s ease}
 
-  /* Buttons */
-  .btn{
-    width:100%;padding:13px 0;border:none;border-radius:12px;
-    font-size:13px;font-weight:700;cursor:pointer;
-    letter-spacing:2px;text-transform:uppercase;transition:all .2s;
-    font-family:'Courier New',monospace
+  /* Verify button (1/4) */
+  .btn-verify{
+    flex:1;padding:0;height:42px;border:none;border-radius:10px;
+    background:var(--purple);color:#fff;font-size:10px;font-weight:700;
+    cursor:pointer;letter-spacing:1px;text-transform:uppercase;
+    transition:all .2s;font-family:'Courier New',monospace;white-space:nowrap
   }
-  .btn-primary{background:var(--purple);color:#fff}
-  .btn-primary:hover:not(:disabled){background:var(--purple2)}
-  .btn-primary:disabled{background:var(--purple3);color:var(--muted);cursor:default}
-  .btn-dim{background:var(--purple3);color:var(--muted);cursor:default}
+  .btn-verify:hover:not(:disabled){background:var(--purple2)}
+  .btn-verify:disabled{background:var(--purple3);color:var(--muted);cursor:default}
+  .btn-verify.dim{background:var(--purple3);color:var(--muted);cursor:default}
 
   /* Key list */
   .keys-header{
     display:flex;justify-content:space-between;align-items:center;
-    margin-bottom:12px;font-size:11px;text-transform:uppercase;letter-spacing:2px
+    margin-bottom:12px;font-size:11px;text-transform:uppercase;letter-spacing:2px;
+    color:var(--muted)
   }
-  .keys-header-label{color:var(--muted)}
-  .keys-header-count{color:var(--muted)}
   .key-list{display:flex;flex-direction:column;gap:8px}
   .key-row{
     background:var(--surface);border:1px solid var(--border);
@@ -65,17 +62,14 @@
     display:flex;align-items:center;gap:8px
   }
   .key-val{
-    flex:1;font-size:13px;color:var(--purple2);letter-spacing:1px;
+    flex:1;font-size:12px;color:var(--purple2);letter-spacing:.5px;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap
   }
   .dur-badge{
-    padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;
-    white-space:nowrap
+    padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap
   }
-  .dur-ok{background:rgba(34,212,122,.1);color:var(--green);
-    border:1px solid rgba(34,212,122,.25)}
-  .dur-max{background:rgba(245,158,11,.1);color:var(--yellow);
-    border:1px solid rgba(245,158,11,.25)}
+  .dur-ok{background:rgba(34,212,122,.1);color:var(--green);border:1px solid rgba(34,212,122,.25)}
+  .dur-max{background:rgba(245,158,11,.1);color:var(--yellow);border:1px solid rgba(245,158,11,.25)}
   .btn-sm{
     padding:5px 12px;border-radius:8px;font-size:11px;font-weight:700;
     cursor:pointer;border:1px solid var(--border);
@@ -83,17 +77,10 @@
   }
   .btn-copy{background:rgba(124,58,237,.1);color:var(--purple2)}
   .btn-copy:hover{background:rgba(124,58,237,.2)}
-  .btn-copy.ok{background:rgba(34,212,122,.1);color:var(--green);
-    border-color:rgba(34,212,122,.3)}
+  .btn-copy.ok{background:rgba(34,212,122,.1);color:var(--green);border-color:rgba(34,212,122,.3)}
   .btn-expand{background:rgba(124,58,237,.1);color:var(--purple2)}
   .btn-expand:hover:not(:disabled){background:rgba(124,58,237,.2)}
   .btn-expand:disabled{background:transparent;color:var(--muted);cursor:default}
-
-  /* Footer */
-  .footer{
-    margin-top:24px;padding-top:16px;border-top:1px solid var(--border);
-    font-size:11px;color:var(--muted);text-align:center;line-height:1.6
-  }
 
   /* Toast */
   #toast{
@@ -102,10 +89,8 @@
     transition:opacity .3s;z-index:999;font-family:'Courier New',monospace
   }
   #toast.show{opacity:1}
-  #toast.ok{background:rgba(34,212,122,.12);color:var(--green);
-    border:1px solid rgba(34,212,122,.3)}
-  #toast.err{background:rgba(244,63,94,.12);color:var(--red);
-    border:1px solid rgba(244,63,94,.3)}
+  #toast.ok{background:rgba(34,212,122,.12);color:var(--green);border:1px solid rgba(34,212,122,.3)}
+  #toast.err{background:rgba(244,63,94,.12);color:var(--red);border:1px solid rgba(244,63,94,.3)}
 </style>
 </head>
 <body>
@@ -113,44 +98,28 @@
 <div class="panel">
   <!-- Header -->
   <div class="header">
-    <div class="header-sub">Free Trial</div>
-    <div class="header-title">LuluXGAG</div>
-    <div class="header-desc">Complete verification to receive your key</div>
+    <div class="header-title">LuluXStarDev</div>
+    <div class="header-desc">Redeem your key — we earn when you do.</div>
   </div>
 
-  <!-- Progress -->
-  <div class="progress-wrap">
-    <div class="progress-meta">
-      <span class="progress-label">Verification</span>
-      <span class="progress-val" id="prog-val">0 / 1</span>
+  <!-- Progress + Verify button (same row) -->
+  <div class="verify-row">
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span class="progress-label">Verification</span>
+        <span class="progress-val" id="prog-val">0 / 1</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill"></div>
+      </div>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="prog-fill"></div>
-    </div>
+    <button class="btn-verify" id="main-btn" onclick="handleMain()">Verify</button>
   </div>
 
-  <!-- Main button -->
-  <div style="margin-bottom:24px" id="btn-wrap">
-    <button class="btn btn-primary" id="main-btn" onclick="handleMain()">
-      Start Verification
-    </button>
-  </div>
-
-  <!-- Key list (hidden until first key) -->
+  <!-- Key list -->
   <div id="keys-section" style="display:none">
-    <div class="keys-header">
-      <span class="keys-header-label">Your Keys</span>
-      <span class="keys-header-count" id="keys-count">0 / 5</span>
-    </div>
+    <div class="keys-header">Your Keys</div>
     <div class="key-list" id="key-list"></div>
-    <div style="margin-top:10px;font-size:11px;color:var(--muted);text-align:center">
-      Max duration: 48H per key. Each expand requires re-verification.
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <div class="footer">
-    1 HWID per key &nbsp;·&nbsp; Keys are locked to your device on first use.
   </div>
 </div>
 
@@ -158,15 +127,13 @@
 
 <script>
 const API = "";
-const COOLDOWN_MS = 2 * 60 * 1000; // 2 menit
+const COOLDOWN_MS = 2 * 60 * 1000;
 
-// ── State ────────────────────────────────────────────────────
 let sessionToken = null;
-let pendingAction = null; // "generate" | "expand"
+let pendingAction = null;
 let pendingExpandKey = null;
 let keys = JSON.parse(localStorage.getItem("lulux_keys") || "[]");
 
-// ── Toast ────────────────────────────────────────────────────
 let toastTimer;
 function toast(msg, type = "ok") {
   const el = document.getElementById("toast");
@@ -175,44 +142,32 @@ function toast(msg, type = "ok") {
   toastTimer = setTimeout(() => el.className = "", 3000);
 }
 
-// ── Cooldown helpers ─────────────────────────────────────────
 function getCooldownLeft() {
   const last = parseInt(localStorage.getItem("lulux_cd") || "0");
   const left = last + COOLDOWN_MS - Date.now();
   return left > 0 ? left : 0;
 }
-function setCooldown() {
-  localStorage.setItem("lulux_cd", Date.now().toString());
-}
+function setCooldown() { localStorage.setItem("lulux_cd", Date.now().toString()); }
 
-// ── Progress ─────────────────────────────────────────────────
 function setProgress(v) {
   document.getElementById("prog-fill").style.width = (v * 100) + "%";
   document.getElementById("prog-val").textContent = `${v} / 1`;
-  document.getElementById("prog-val").style.color =
-    v === 1 ? "var(--green)" : "var(--muted)";
+  document.getElementById("prog-val").style.color = v === 1 ? "var(--green)" : "var(--muted)";
 }
 
-// ── Button state ─────────────────────────────────────────────
 function setBtn(text, disabled = false, dim = false) {
   const btn = document.getElementById("main-btn");
   btn.textContent = text;
   btn.disabled = disabled;
-  btn.className = "btn " + (dim ? "btn-dim" : "btn-primary");
+  btn.className = "btn-verify" + (dim ? " dim" : "");
 }
 
-// ── Render key list ──────────────────────────────────────────
 function renderKeys() {
   const list = document.getElementById("key-list");
   const section = document.getElementById("keys-section");
-  const count = document.getElementById("keys-count");
-
-  // Clean expired
   const now = Math.floor(Date.now() / 1000);
   keys = keys.filter(k => !k.expireAt || k.expireAt === 0 || k.expireAt > now);
   localStorage.setItem("lulux_keys", JSON.stringify(keys));
-
-  count.textContent = `${keys.length} / 5`;
   if (keys.length === 0) { section.style.display = "none"; return; }
   section.style.display = "block";
 
@@ -222,21 +177,19 @@ function renderKeys() {
     const remH = isPerm ? Infinity : Math.floor(remSecs / 3600);
     const isMax = remH >= 48;
     const durLabel = isPerm ? "Permanent"
-      : remH >= 24 ? `${Math.floor(remH/24)}D ${remH%24}H`
-      : `${remH}H`;
+      : remH >= 24 ? `${Math.floor(remH/24)}D ${remH%24}H` : `${remH}H`;
 
     return `<div class="key-row">
       <div class="key-val" title="${k.key}">${k.key}</div>
       <span class="dur-badge ${isMax ? 'dur-max' : 'dur-ok'}">${durLabel}</span>
       <button class="btn-sm btn-copy" id="cp-${k.key}" onclick="copyKey('${k.key}')">Copy</button>
-      <button class="btn-sm btn-expand" ${isMax ? 'disabled' : ''} onclick="startExpand('${k.key}')">
+      <button class="btn-sm btn-expand" ${isMax?'disabled':''} onclick="startExpand('${k.key}')">
         ${isMax ? "Max" : "+12H"}
       </button>
     </div>`;
   }).join("");
 }
 
-// ── Copy key ─────────────────────────────────────────────────
 function copyKey(key) {
   navigator.clipboard.writeText(key).then(() => {
     const btn = document.getElementById(`cp-${key}`);
@@ -248,40 +201,32 @@ function copyKey(key) {
   });
 }
 
-// ── Main button handler ───────────────────────────────────────
 function handleMain() {
   if (sessionToken) {
-    // Sudah verified → generate
-    doGenerate();
+    if (pendingAction === "expand" && pendingExpandKey) doExpand();
+    else doGenerate();
   } else {
-    startVerify("generate");
+    if (keys.length >= 5) { toast("Key limit reached (5/5).", "err"); return; }
+    startVerify(pendingAction || "generate");
   }
 }
 
-// ── Start expand ─────────────────────────────────────────────
 function startExpand(key) {
   const cd = getCooldownLeft();
-  if (cd > 0) {
-    toast(`Wait ${Math.ceil(cd/1000)}s before next action.`, "err"); return;
-  }
+  if (cd > 0) { toast(`Wait ${Math.ceil(cd/1000)}s.`, "err"); return; }
   pendingAction = "expand";
   pendingExpandKey = key;
   sessionToken = null;
   setProgress(0);
-  setBtn("Start Verification");
+  setBtn("Verify");
   toast("Verify to expand this key.");
-  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ── Start Linkvertise verify ──────────────────────────────────
 async function startVerify(action) {
   const cd = getCooldownLeft();
-  if (cd > 0) {
-    toast(`Wait ${Math.ceil(cd/1000)}s before verifying again.`, "err"); return;
-  }
+  if (cd > 0) { toast(`Wait ${Math.ceil(cd/1000)}s.`, "err"); return; }
   pendingAction = action || "generate";
-  setBtn("Redirecting...", true);
-
+  setBtn("...", true);
   try {
     const r = await fetch(API + "/api/claimkey", {
       method: "POST",
@@ -295,17 +240,16 @@ async function startVerify(action) {
       window.location.href = data.url;
     } else {
       toast("Failed to get link.", "err");
-      setBtn("Start Verification");
+      setBtn("Verify");
     }
   } catch {
     toast("Network error.", "err");
-    setBtn("Start Verification");
+    setBtn("Verify");
   }
 }
 
-// ── Verify hash (called on return from Linkvertise) ───────────
 async function verifyHash(hash) {
-  setBtn("Verifying...", true);
+  setBtn("...", true);
   try {
     const r = await fetch(API + "/api/claimkey", {
       method: "POST",
@@ -316,35 +260,27 @@ async function verifyHash(hash) {
     if (data.valid) {
       sessionToken = data.token;
       setProgress(1);
-      // Restore pending action
       const pa = localStorage.getItem("lulux_pending") || "generate";
       pendingAction = pa;
       pendingExpandKey = localStorage.getItem("lulux_expand_key") || null;
       localStorage.removeItem("lulux_pending");
       localStorage.removeItem("lulux_expand_key");
-      // Clean URL
       window.history.replaceState({}, "", "/getkey");
-
-      if (pa === "expand" && pendingExpandKey) {
-        setBtn("Expand +12H");
-      } else {
-        setBtn(keys.length === 0 ? "Generate Key" : "Add New Key");
-      }
+      setBtn(pa === "expand" ? "Expand" : "Generate");
     } else {
       toast(data.message || "Verification failed.", "err");
-      setBtn("Start Verification");
+      setBtn("Verify");
     }
   } catch {
     toast("Verification error.", "err");
-    setBtn("Start Verification");
+    setBtn("Verify");
   }
 }
 
-// ── Generate key ─────────────────────────────────────────────
 async function doGenerate() {
   if (!sessionToken) return;
   if (keys.length >= 5) { toast("Key limit reached (5/5).", "err"); return; }
-  setBtn("Generating...", true);
+  setBtn("...", true);
   try {
     const r = await fetch(API + "/api/claimkey", {
       method: "POST",
@@ -360,22 +296,21 @@ async function doGenerate() {
       setProgress(0);
       renderKeys();
       toast("Key generated.");
-      setBtn("Start Verification");
+      setBtn("Verify");
     } else {
-      toast(data.message || "Failed to generate.", "err");
-      setBtn("Start Verification");
+      toast(data.message || "Failed.", "err");
+      setBtn("Verify");
       sessionToken = null; setProgress(0);
     }
   } catch {
     toast("Network error.", "err");
-    setBtn("Start Verification");
+    setBtn("Verify");
   }
 }
 
-// ── Expand key ───────────────────────────────────────────────
 async function doExpand() {
   if (!sessionToken || !pendingExpandKey) return;
-  setBtn("Expanding...", true);
+  setBtn("...", true);
   try {
     const r = await fetch(API + "/api/claimkey", {
       method: "POST",
@@ -392,51 +327,35 @@ async function doExpand() {
       setProgress(0);
       renderKeys();
       toast("Key expanded +12H.");
-      setBtn("Start Verification");
+      setBtn("Verify");
     } else {
-      toast(data.message || "Failed to expand.", "err");
-      setBtn("Start Verification");
+      toast(data.message || "Failed.", "err");
+      setBtn("Verify");
       sessionToken = null; setProgress(0);
     }
   } catch {
     toast("Network error.", "err");
-    setBtn("Start Verification");
+    setBtn("Verify");
   }
 }
 
-// ── Override handleMain for expand context ───────────────────
-function handleMain() {
-  if (sessionToken) {
-    if (pendingAction === "expand" && pendingExpandKey) doExpand();
-    else doGenerate();
-  } else {
-    if (keys.length >= 5) { toast("Key limit reached (5/5).", "err"); return; }
-    startVerify(pendingAction || "generate");
-  }
-}
-
-// ── Init ─────────────────────────────────────────────────────
 (function init() {
   const params = new URLSearchParams(window.location.search);
-  const hash   = params.get("hash");
-
+  const hash = params.get("hash");
   renderKeys();
-
   if (hash) {
-    setProgress(0);
     verifyHash(hash);
   } else {
-    // Restore button label based on context
     const cdLeft = getCooldownLeft();
     if (cdLeft > 0) {
-      setBtn(`Cooldown: ${Math.ceil(cdLeft/1000)}s`, true, true);
+      setBtn(`${Math.ceil(cdLeft/1000)}s`, true, true);
       const t = setInterval(() => {
         const left = getCooldownLeft();
-        if (left <= 0) { clearInterval(t); setBtn("Start Verification"); return; }
-        setBtn(`Cooldown: ${Math.ceil(left/1000)}s`, true, true);
+        if (left <= 0) { clearInterval(t); setBtn("Verify"); return; }
+        setBtn(`${Math.ceil(left/1000)}s`, true, true);
       }, 1000);
     } else {
-      setBtn("Start Verification");
+      setBtn("Verify");
     }
   }
 })();
