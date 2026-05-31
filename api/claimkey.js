@@ -35,7 +35,7 @@ export default async function handler(req, res) {
   // ── GET LINKVERTISE URL ──────────────────────────────────────
   if (action === "getlink") {
     const callback = `${SITE_URL}/getkey`;
-    const encoded  = Buffer.from(callback).toString("base64");
+    const encoded  = encodeURIComponent(callback);
     const random   = (Math.random() * 1000).toFixed(10);
     const url      = `https://link-to.net/${LINKVERTISE_USER_ID}/${random}/dynamic?r=${encoded}`;
     return res.status(200).json({ url });
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
     try {
       const r = await fetch(
         `https://publisher.linkvertise.com/api/v1/antiBypass/hash/${hash}`,
-        { headers: { Authorization: LINKVERTISE_API_KEY } }
+        { headers: { Authorization: `Bearer ${LINKVERTISE_API_KEY}` } }
       );
       const data = await r.json();
       if (!data?.response || data.response.status !== "FOUND") {
