@@ -46,17 +46,21 @@ export default async function handler(req, res) {
     const { hash } = body;
     if (!hash) return res.status(400).json({ valid: false, message: "Missing hash" });
 
+    console.log("Verifying hash:", hash);
+
     try {
       const r = await fetch(
         `https://publisher.linkvertise.com/api/v1/antiBypass/hash/${hash}`,
         { headers: { Authorization: `Bearer ${LINKVERTISE_API_KEY}` } }
       );
       const data = await r.json();
+      console.log("Linkvertise response:", JSON.stringify(data));
       if (!data?.response || data.response.status !== "FOUND") {
         return res.status(200).json({ valid: false, message: "Verification failed" });
       }
-    } catch {
-      return res.status(200).json({ valid: false, message: "Linkvertise error" });
+    } catch (err) {
+      console.error("Linkvertise fetch error:", err.message, "| hash:", hash);
+      return res.status(200).json({ valid: false, message: "Linkvertise error", debug: err.message });
     }
 
     // Issue one-time session token (valid 5 menit)
