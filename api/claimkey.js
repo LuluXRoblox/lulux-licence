@@ -16,9 +16,12 @@ function genKeyStr() {
   const c = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   const r = (n) => Array.from({ length: n }, () => c[Math.floor(Math.random() * c.length)]).join("");
   const now = new Date();
+  const hh = String(now.getHours()).padStart(2, "0");
+  const mm = String(now.getMinutes()).padStart(2, "0");
+  const mo = String(now.getMonth() + 1).padStart(2, "0");
   const dd = String(now.getDate()).padStart(2, "0");
   const yy = String(now.getFullYear()).slice(-2);
-  return `LULUX-${r(4)}-${r(4)}-${dd}${yy}`;
+  return `LULUX-${r(4)}-${r(4)}-${hh}${mm}-${mo}${dd}${yy}`;
 }
 
 export default async function handler(req, res) {
@@ -81,7 +84,7 @@ export default async function handler(req, res) {
     const key      = genKeyStr();
     const expireAt = Math.floor(Date.now() / 1000) + TRIAL_HOURS * 3600;
     const keyData  = {
-      key, name: "Trial", status: "user",
+      key, name: "User", status: "user",
       maxHwid: 1, hwids: [], expireAt,
       createdAt: Math.floor(Date.now() / 1000),
       source: "trial",
