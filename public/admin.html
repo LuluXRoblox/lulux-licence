@@ -168,7 +168,7 @@
 <div id="login-screen">
   <div class="login-box">
     <h1>LuluXGAG</h1>
-    <p>Admin Panel — Enter Secret Key</p>
+    <p>Admin Panel — Enter Key</p>
     <input type="password" id="secret-input" placeholder="Admin secret..." onkeydown="if(event.key==='Enter')doLogin()">
     <button class="btn btn-purple" style="width:85%;margin:0 auto;display:block" onclick="doLogin()">Login</button>
     <div class="login-error" id="login-err"></div>
@@ -227,11 +227,11 @@
     <h2 id="modal-title">Add Key</h2>
     <div class="field">
       <label>Key *</label>
-      <input type="text" id="m-key" placeholder="e.g. LULUX-XXXX-2026">
+      <input type="text" id="m-key" placeholder="ex. LULUX-XXXX-XXX">
     </div>
     <div class="field">
       <label>Owner Name *</label>
-      <input type="text" id="m-name" placeholder="e.g. Lulu">
+      <input type="text" id="m-name" placeholder="example Lulu">
     </div>
     <div class="field">
       <label>Status</label>
@@ -242,13 +242,13 @@
       </select>
     </div>
     <div class="field">
-      <label>Max HWID (1–999)</label>
+      <label>Max HWID</label>
       <input type="number" id="m-hwid" value="1" min="1" max="999">
     </div>
     <div class="field">
-      <label>Expired In — format <code style="color:var(--purple2)">Jam:Hari:Bulan</code></label>
-      <input type="text" id="m-expire" placeholder="Kosong = Permanent  |  2H  |  1D  |  1W  |  1M  |  2D 1W = 9 hari">
-      <div class="field-hint">H=hours · D=days · W=weeks · M=months &nbsp;|&nbsp; Contoh: 2H · 1D · 2W · 1M · 2D 1W (9 hari)</div>
+      <label>Expired In - <code style="color:var(--purple2)">Hours Day Week</code></label>
+      <input type="text" id="m-expire" placeholder="nill = Permanent  |  2H  |  1D  |  1W  |  1M  |  2D 1W">
+      <div class="field-hint">H=hours · D=days · W=weeks · M=months &nbsp;|&nbsp; Example: 2H · 1D · 2W · 1M · 2D 1W (9 Day)</div>
     </div>
     <div class="field" id="reset-field" style="display:none">
       <label><input type="checkbox" id="m-reset"> Reset HWID list</label>
@@ -274,7 +274,7 @@ let editingKey = null;
 // ── Auth ──────────────────────────────────────────────────────
 function doLogin() {
   const val = document.getElementById("secret-input").value.trim();
-  if (!val) { document.getElementById("login-err").textContent = "Enter secret key."; return; }
+  if (!val) { document.getElementById("login-err").textContent = "Enter key."; return; }
   ADMIN_SECRET = val;
   loadKeys().then(ok => {
     if (ok) {
