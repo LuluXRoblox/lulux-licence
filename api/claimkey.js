@@ -50,9 +50,9 @@ export default async function handler(req, res) {
         `https://publisher.linkvertise.com/api/v1/anti_bypassing?token=${LINKVERTISE_API_KEY}&hash=${hash}`,
         { method: "POST" }
       );
-      const text = (await r.text()).trim();
-      if (text !== "TRUE") {
-        return res.status(200).json({ valid: false, message: "Verification failed: " + text });
+      const data = await r.json();
+      if (!data.status) {
+        return res.status(200).json({ valid: false, message: "Verification failed" });
       }
     } catch (e) {
       return res.status(200).json({ valid: false, message: "Linkvertise error: " + e.message });
