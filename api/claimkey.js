@@ -48,15 +48,11 @@ export default async function handler(req, res) {
 
     try {
       const r = await fetch(
-        `https://publisher.linkvertise.com/api/v1/antiBypass/hash/${hash}`,
-        { headers: { Authorization: `${LINKVERTISE_USER_ID}:${LINKVERTISE_API_KEY}` } }
+        `https://publisher.linkvertise.com/api/v1/anti_bypassing?token=${LINKVERTISE_API_KEY}&hash=${hash}`,
+        { method: "POST" }
       );
-      const text = await r.text();
-      let data;
-      try { data = JSON.parse(text); } catch {
-        return res.status(200).json({ valid: false, message: "Verification failed" });
-      }
-      if (!data?.response || data.response.status !== "FOUND") {
+      const text = (await r.text()).trim();
+      if (text !== "TRUE") {
         return res.status(200).json({ valid: false, message: "Verification failed" });
       }
     } catch {
