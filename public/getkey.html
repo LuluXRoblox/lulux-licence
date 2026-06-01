@@ -339,6 +339,30 @@ async function doExpand() {
   }
 }
 
+async function validateStoredKeys() {
+  if (keys.length === 0) return;
+  try {
+    const r = await fetch(API + "/api/claimkey", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "checkkeys", keys: keys.map(k => k.key) })
+    });
+    const data = await r.json();
+    const validKeys = data.valid || [];
+    // Keep only keys that server confirms valid, update expireAt
+    keys = keys
+      .map(k => {
+        const sv = validKeys.find(v => v.key === k.key);
+        return sv ? { ...k, expireAt: sv.expireAt } : null;
+      })
+      .filter(Boolean);
+    localStorage.setItem("lulux_keys", JSON.stringify(keys));
+    renderKeys();
+  } catch {
+    // Network error - keep keys as-is, will fail at verify anyway
+  }
+}
+
 (function init() {
   const params = new URLSearchParams(window.location.search);
   const hash = params.get("hash");
@@ -346,6 +370,8 @@ async function doExpand() {
   if (hash) {
     verifyHash(hash);
   } else {
+    // Validate stored keys against server on load
+    validateStoredKeys();
     const cdLeft = getCooldownLeft();
     if (cdLeft > 0) {
       setBtn(`${Math.ceil(cdLeft/1000)}s`, true, true);
