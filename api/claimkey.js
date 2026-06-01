@@ -126,5 +126,20 @@ export default async function handler(req, res) {
     return res.status(200).json({ success: true, key, expireAt: keyData.expireAt });
   }
 
+  // ── CHECK KEYS (validasi array key, no HWID) ────────────────
+  if (action === "checkkeys") {
+    const { keys } = body;
+    if (!Array.isArray(keys)) return res.status(400).json({ valid: [] });
+    const now = Math.floor(Date.now() / 1000);
+    const valid = [];
+    await Promise.all(keys.map(async (k) => {
+      const data = await kv.get(`key:${k}`);
+      if (data && (!data.expireAt || data.expireAt === 0 || data.expireAt > now)) {
+        valid.push({ key: k, expireAt: data.expireAt || 0 });
+      }
+    }));
+    return res.status(200).json({ valid });
+  }
+
   return res.status(400).json({ error: "Unknown action" });
 }
