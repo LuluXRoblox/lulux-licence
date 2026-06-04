@@ -181,6 +181,7 @@
     <div class="logo">LuluX<span>StarDev</span> <span style="font-size:13px;color:var(--muted);font-weight:400">Admin Panel</span></div>
     <div class="header-right">
       <span class="badge">Key System v2</span>
+      <button class="btn btn-green btn-sm" onclick="registerCommands()">Register Bot</button>
       <button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>
     </div>
   </header>
@@ -232,6 +233,7 @@
       <label>Status</label>
       <select id="m-status">
         <option value="user">User</option>
+        <option value="VIPMEM">VIPMEM</option>
         <option value="Developer">Developer</option>
         <option value="timDeveloper">Tim Developer</option>
       </select>
@@ -484,6 +486,21 @@ function copyKey() {
   const val = document.getElementById('m-key').value.trim();
   if (!val) { toast('Generate a key first.', 'err'); return; }
   navigator.clipboard.writeText(val).then(() => toast('Key copied.', 'ok'));
+}
+
+// ── Register Discord bot commands ────────────────────────────
+async function registerCommands() {
+  if (!confirm('Register /verify command to Discord? Do this once only.')) return;
+  try {
+    const r = await fetch('/api/setup-commands', {
+      headers: { 'x-admin-secret': ADMIN_SECRET }
+    });
+    const data = await r.json();
+    if (Array.isArray(data)) toast('Bot commands registered!', 'ok');
+    else toast('Error: ' + JSON.stringify(data), 'err');
+  } catch {
+    toast('Failed to register commands.', 'err');
+  }
 }
 
 // ── Close modal on bg click ───────────────────────────────────
