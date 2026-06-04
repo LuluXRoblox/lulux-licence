@@ -6,12 +6,33 @@ const kv = new Redis({
 
 const ADMIN_SECRET = process.env.ADMIN_SECRET || "changeme";
 
-// ── Helper: parse "jam:hari:bulan" → unix expireAt ────────────
+async function sendWebhook(title, desc, color = 0x7c3aed) {
+  const url = process.env.DISCORD_WEBHOOK_URL;
+  if (!url) return;
+  await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      embeds: [{ title, description: desc, color,
+        timestamp: new Date().toISOString() }]
+    })
+  }).catch(() => {});
+}
+
+// ── Helper: parse format H/D/W/M → unix expireAt ─────────────
+// H=jam, D=hari, W=minggu, M=bulan
+// contoh: "2H" "1D" "1W" "2D 1W" "1M"
 function parseExpiry(str) {
-  if (!str || str.trim() === "" || str === "0:0:0") return 0; // permanent
-  const parts = str.split(":").map((v) => parseInt(v) || 0);
-  const [jam = 0, hari = 0, bulan = 0] = parts;
-  const secs = jam * 3600 + hari * 86400 + bulan * 2592000;
+  if (!str || str.trim() === "") return 0; // permanent
+  let secs = 0;
+  for (const [, num, unit] of str.matchAll(/(\d+)\s*([HhDdWwMm])/g)) {
+    const n = parseInt(num);
+    const u = unit.toUpperCase();
+    if      (u === "H") secs += n * 3600;
+    else if (u === "D") secs += n * 86400;
+    else if (u === "W") secs += n * 604800;
+    else if (u === "M") secs += n * 2592000;
+  }
   if (secs === 0) return 0;
   return Math.floor(Date.now() / 1000) + secs;
 }
@@ -45,14 +66,22 @@ export default async function handler(req, res) {
   // ── GET: list all keys ────────────────────────────────────────
   if (req.method === "GET") {
     const keys = (await kv.smembers("keys")) || [];
-    const items = await Promise.all(
+    const now = Math.floor(Date.now() / 1000);
+    const items = [];
+    await Promise.all(
       keys.map(async (k) => {
         const d = await kv.get(`key:${k}`);
-        if (!d) return null;
-        return { ...d, expireLabel: formatExpiry(d.expireAt) };
+        if (!d) { await kv.srem("keys", k); return; }
+        // Auto-delete expired keys
+        if (d.expireAt && d.expireAt > 0 && d.expireAt < now) {
+          await kv.del(`key:${k}`);
+          await kv.srem("keys", k);
+          return;
+        }
+        items.push({ ...d, expireLabel: formatExpiry(d.expireAt) });
       })
     );
-    return res.status(200).json(items.filter(Boolean));
+    return res.status(200).json(items);
   }
 
   // ── POST: add new key ─────────────────────────────────────────
@@ -108,8 +137,12 @@ export default async function handler(req, res) {
     const { key } = req.body || {};
     if (!key) return res.status(400).json({ error: "key is required" });
 
+    const delData = await kv.get(`key:${key}`);
     await kv.del(`key:${key}`);
     await kv.srem("keys", key);
+    if (delData) await sendWebhook("Key Deleted by Admin",
+      `**Key:** \`${key}\`
+**Owner:** ${delData.name}`, 0xff4455);
     return res.status(200).json({ success: true });
   }
 
