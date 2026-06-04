@@ -34,6 +34,16 @@ export default async function handler(req, res) {
   const query  = req.query || {};
   const action = body.action || query.action;
 
+  // ── IP rate limit: 3x per 2 menit ───────────────────────────
+  const ip      = (req.headers["x-forwarded-for"] || "unknown").split(",")[0].trim();
+  const rlIpKey = `rl:ip:${ip}`;
+  const rlCount = await kv.incr(rlIpKey);
+  if (rlCount === 1) await kv.expire(rlIpKey, 60);
+  if (rlCount > 3) {
+    return res.status(200).json({ valid: false, success: false,
+      message: "Too many requests. Wait 1 minute." });
+  }
+
   // ── GET LINKVERTISE URL ──────────────────────────────────────
   if (action === "getlink") {
     const callback = `${SITE_URL}/getkey`;
