@@ -140,9 +140,30 @@ export default async function handler(req, res) {
     const delData = await kv.get(`key:${key}`);
     await kv.del(`key:${key}`);
     await kv.srem("keys", key);
-    if (delData) await sendWebhook("Key Deleted by Admin",
-      `**Key:** \`${key}\`
-**Owner:** ${delData.name}`, 0xff4455);
+
+    if (delData) {
+      // Hapus Discord link + cabut role
+      if (delData.discordId) {
+        await kv.del(`discord:${delData.discordId}`);
+
+        const guildId = process.env.DISCORD_GUILD_ID;
+        const roleId  = process.env.DISCORD_ROLE_ID;
+        const token   = process.env.DISCORD_BOT_TOKEN;
+        if (guildId && roleId && token) {
+          await fetch(
+            `https://discord.com/api/v10/guilds/${guildId}/members/${delData.discordId}/roles/${roleId}`,
+            { method: "DELETE", headers: { "Authorization": `Bot ${token}` } }
+          ).catch(() => {});
+        }
+      }
+
+      await sendWebhook("Key Deleted by Admin",
+        `**Key:** \`${key}\`
+**Owner:** ${delData.name}${delData.discordId ? `
+**Discord:** <@${delData.discordId}> — role revoked` : ""}`,
+        0xff4455);
+    }
+
     return res.status(200).json({ success: true });
   }
 
