@@ -1,8 +1,3 @@
-
-  }
-
-  return res.status(400).end();
-}
 import { Redis } from "@upstash/redis";
 
 export const config = { api: { bodyParser: false } };
@@ -64,7 +59,7 @@ function formatRem(secs) {
 }
 
 // ── Panel message ─────────────────────────────────────────────
-export async function sendPanelMessage() {
+async function sendPanelMessage() {
   // Cek apakah panel sudah pernah dikirim
   const sent = await kv.get("panel:sent");
   if (sent) return { already: true };
@@ -81,13 +76,13 @@ export async function sendPanelMessage() {
       }],
       components: [
         { type: 1, components: [
-          { type: 2, style: 3, label: "Verify Key",  custom_id: "redeem_key", emoji: { name: "" } },
+          { type: 2, style: 3, label: "Verify Key",  custom_id: "redeem_key", emoji: { name: "🔑" } },
         ]},
         { type: 1, components: [
-          { type: 2, style: 2, label: "Key Info",    custom_id: "key_info",   emoji: { name: "" } },
-          { type: 2, style: 4, label: "Reset HWID",  custom_id: "reset_hwid", emoji: { name: "" } },
-          { type: 2, style: 3, label: "Get Script",  custom_id: "get_script", emoji: { name: "" } },
-          { type: 2, style: 1, label: "Get Role",    custom_id: "get_role",   emoji: { name: "" } },
+          { type: 2, style: 2, label: "Key Info",    custom_id: "key_info",   emoji: { name: "📋" } },
+          { type: 2, style: 4, label: "Reset HWID",  custom_id: "reset_hwid", emoji: { name: "⚙️" } },
+          { type: 2, style: 3, label: "Get Script",  custom_id: "get_script", emoji: { name: "📜" } },
+          { type: 2, style: 1, label: "Get Role",    custom_id: "get_role",   emoji: { name: "👤" } },
         ]},
       ],
     }),
