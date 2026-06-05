@@ -1,5 +1,4 @@
-// Panggil endpoint ini SEKALI untuk register slash commands ke Discord
-// GET /api/setup-commands dengan header x-admin-secret
+import { sendPanelMessage } from "./bot.js";
 
 export default async function handler(req, res) {
   const secret = req.headers["x-admin-secret"];
@@ -10,30 +9,18 @@ export default async function handler(req, res) {
   const guildId = process.env.DISCORD_GUILD_ID;
   const token   = process.env.DISCORD_BOT_TOKEN;
 
-  const commands = [
-    {
-      name: "verify",
-      description: "Verify your VIP key to unlock the panel",
-      options: [{
-        name: "key",
-        description: "Your VIPMEM key",
-        type: 3,       // STRING
-        required: true,
-      }]
-    }
-  ];
-
-  const r = await fetch(
+  // Register slash commands (kosong — semua pakai buttons sekarang)
+  await fetch(
     `https://discord.com/api/v10/applications/${appId}/guilds/${guildId}/commands`,
     {
       method: "PUT",
-      headers: {
-        "Authorization": `Bot ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(commands),
+      headers: { "Authorization": `Bot ${token}`, "Content-Type": "application/json" },
+      body: JSON.stringify([]),
     }
   );
-  const data = await r.json();
-  return res.json(data);
+
+  // Auto send panel ke channel
+  const panelResult = await sendPanelMessage();
+
+  return res.json({ success: true, panel: panelResult });
 }
