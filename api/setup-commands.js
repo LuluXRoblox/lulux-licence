@@ -19,20 +19,20 @@ async function sendPanelMessage() {
       },
       body: JSON.stringify({
         embeds: [{
-          title: "LuluXStarDev — VIP Panel",
-          description: "If you're a buyer, use the buttons below to redeem your key, get the script, or manage your account.",
+          title: "LuluXStarDev — KEY PANEL",
+          description: "If you're have a Ky, use the buttons below to redeem your key, get the script, or manage your key.",
           color: 0x7c3aed,
-          footer: { text: "LuluXStarDev • VIP Members Only" },
+          footer: { text: "LuluXStarDev • KEY PANEL" },
         }],
         components: [
           { type: 1, components: [
-            { type: 2, style: 3, label: "Verify Key", custom_id: "redeem_key", emoji: { name: "🔑" } },
+            { type: 2, style: 3, label: "Verify Key", custom_id: "redeem_key"},
           ]},
           { type: 1, components: [
-            { type: 2, style: 2, label: "Key Info",   custom_id: "key_info",   emoji: { name: "📋" } },
-            { type: 2, style: 4, label: "Reset HWID", custom_id: "reset_hwid", emoji: { name: "⚙️" } },
-            { type: 2, style: 3, label: "Get Script", custom_id: "get_script", emoji: { name: "📜" } },
-            { type: 2, style: 1, label: "Get Role",   custom_id: "get_role",   emoji: { name: "👤" } },
+            { type: 2, style: 2, label: "Key Info",   custom_id: "key_info" },
+            { type: 2, style: 4, label: "Reset HWID", custom_id: "reset_hwid" },
+            { type: 2, style: 3, label: "Get Script", custom_id: "get_script"},
+            { type: 2, style: 1, label: "Get Role",   custom_id: "get_role"},
           ]},
         ],
       }),
@@ -64,4 +64,3 @@ export default async function handler(req, res) {
   const panelResult = await sendPanelMessage();
   return res.json({ success: true, panel: panelResult });
 }
-
