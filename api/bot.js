@@ -69,20 +69,20 @@ async function sendPanelMessage() {
     headers: { "Authorization": `Bot ${BOT_TOKEN}`, "Content-Type": "application/json" },
     body: JSON.stringify({
       embeds: [{
-        title: "LuluXStarDev — VIP Panel",
-        description: "If you're a buyer, use the buttons below to redeem your key, get the script, or manage your account.",
+        title: "LuluXStarDev — Key Panel",
+        description: "If you're have a key, use the buttons below to redeem your key, get the script, and manage your key.",
         color: 0x7c3aed,
-        footer: { text: "LuluXStarDev • VIP Members Only" },
+        footer: { text: "LuluXStarDev •KEY-PANEL" },
       }],
       components: [
         { type: 1, components: [
-          { type: 2, style: 3, label: "Verify Key",  custom_id: "redeem_key", emoji: { name: "🔑" } },
+          { type: 2, style: 3, label: "Verify Key",  custom_id: "redeem_key" },
         ]},
         { type: 1, components: [
-          { type: 2, style: 2, label: "Key Info",    custom_id: "key_info",   emoji: { name: "📋" } },
-          { type: 2, style: 4, label: "Reset HWID",  custom_id: "reset_hwid", emoji: { name: "⚙️" } },
-          { type: 2, style: 3, label: "Get Script",  custom_id: "get_script", emoji: { name: "📜" } },
-          { type: 2, style: 1, label: "Get Role",    custom_id: "get_role",   emoji: { name: "👤" } },
+          { type: 2, style: 2, label: "Key Info",    custom_id: "key_info" },
+          { type: 2, style: 4, label: "Reset HWID",  custom_id: "reset_hwid"},
+          { type: 2, style: 3, label: "Get Script",  custom_id: "get_script" },
+          { type: 2, style: 1, label: "Get Role",    custom_id: "get_role" },
         ]},
       ],
     }),
@@ -129,9 +129,9 @@ export default async function handler(req, res) {
             components: [{
               type: 4,
               custom_id: "key_input",
-              label: "Enter your VIPMEM key",
+              label: "Enter your key",
               style: 1,
-              placeholder: "LULUX-NAME-XXXX-HHMM-MMDDYY",
+              placeholder: "....",
               required: true,
             }]
           }]
@@ -172,8 +172,8 @@ export default async function handler(req, res) {
     if (cid === "reset_hwid") {
       const cdKey   = `resethwid_cd:${discordId}`;
       const cdCount = parseInt(await kv.get(cdKey) || "0");
-      if (cdCount >= 3)
-        return res.json(ephemeral("You have used all 3 HWID resets for today."));
+      if (cdCount >= 30)
+        return res.json(ephemeral("You used all 30 HWID resets again tomorrow."));
 
       keyData.hwids = [];
       await kv.set(`key:${linkedKey}`, keyData);
@@ -184,7 +184,7 @@ export default async function handler(req, res) {
 
       return res.json(ephemeral(null, [{
         title: "HWID Reset",
-        description: `HWID list cleared. Re-register on next script launch.\n**Resets used today:** ${newCount}/3`,
+        description: `HWID list cleared. Re-register on next script launch.\n**Resets used today:** ${newCount}/30`,
         color: 0x22d47a,
       }]));
     }
@@ -217,9 +217,10 @@ export default async function handler(req, res) {
     if (!key) return res.json(ephemeral("Please enter a key."));
 
     const keyData = await kv.get(`key:${key}`);
-    if (!keyData)          return res.json(ephemeral("Invalid key."));
-    if (keyData.status !== "VIPMEM")
-      return res.json(ephemeral("This key does not have VIP access."));
+    if (!keyData) return res.json(ephemeral("Invalid key."));
+    const vipStatuses = ["VMEM", "timDeveloper", "Developer"];
+    if (!vipStatuses.includes(keyData.status))
+      return res.json(ephemeral("This key does not have panel access."));
 
     const existingKey = await kv.get(`discord:${discordId}`);
     if (existingKey && existingKey !== key)
