@@ -181,7 +181,6 @@
     <div class="logo">LuluX<span>StarDev</span> <span style="font-size:13px;color:var(--muted);font-weight:400">Admin Panel</span></div>
     <div class="header-right">
       <span class="badge">Key System v2</span>
-      <button class="btn btn-purple btn-sm" onclick="sendPanel()">Send Panel</button>
       <button class="btn btn-red btn-sm" onclick="doLogout()">Logout</button>
     </div>
   </header>
@@ -497,21 +496,6 @@ function copyKey() {
   const val = document.getElementById('m-key').value.trim();
   if (!val) { toast('Generate a key first.', 'err'); return; }
   navigator.clipboard.writeText(val).then(() => toast('Key copied.', 'ok'));
-}
-
-// ── Send Discord panel message ───────────────────────────────
-async function sendPanel() {
-  if (!confirm('Send VIP panel message to Discord channel?')) return;
-  try {
-    const r = await fetch('/api/send-panel', {
-      headers: { 'x-admin-secret': ADMIN_SECRET }
-    });
-    const data = await r.json();
-    if (data.success) toast('Panel sent to Discord!', 'ok');
-    else toast('Error: ' + JSON.stringify(data.error), 'err');
-  } catch {
-    toast('Failed to send panel.', 'err');
-  }
 }
 
 // ── Close modal on bg click ───────────────────────────────────
